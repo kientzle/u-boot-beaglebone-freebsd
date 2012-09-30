@@ -71,7 +71,7 @@ all:	$(obj).depend $(OUTPUT)
 #########################################################################
 
 $(OUTPUT):	$(OBJS)
-		$(LD) -Ttext $(LOAD_ADDR) -o $@ $^ -L$(gcclibdir) -lgcc
+		$(LD) -static -Ttext $(LOAD_ADDR) -o $@ $^ -L$(gcclibdir) -lgcc -lc
 		$(OBJCOPY) -O binary $@ $(OUTPUT).bin 2>/dev/null
 
 # Rule to build generic library C files
