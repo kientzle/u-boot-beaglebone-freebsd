@@ -25,6 +25,7 @@
 #undef CONFIG_CMD_IDE
 
 #ifndef CONFIG_SPL_BUILD
+#define CONFIG_OF_LIBFDT 1
 #define CONFIG_CMD_ELF
 #define CONFIG_API
 #define CONFIG_SYS_MMC_MAX_DEVICE 1
@@ -67,6 +68,11 @@
 		"echo Loaded environment from ${bootenv};" \
 		"run importbootenv;" \
 	"fi;" \
+        "if test -n $uenvcmd; then " \
+                "echo Running uenvcmd ...;" \
+                "run uenvcmd;" \
+        "fi;" \
+	"echo Using default boot sequence.;" \
 	"fatload mmc 0:1 88000000 ubldr;" \
 	"bootelf 88000000;"
 
