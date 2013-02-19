@@ -50,31 +50,30 @@
 #define CONFIG_MMC
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"loadaddr=0x82000000\0" \
+	"loadaddr=0x88000000\0" \
 	"console=ttyO0,115200n8\0" \
 	"mmc_dev=0\0" \
-	"bootenv=uEnv.txt\0" \
+	"bootenv=bb-uEnv.txt\0" \
+	"nextstage=bb-ubldr\0" \
 	"loadbootenv=fatload mmc ${mmc_dev} ${loadaddr} ${bootenv}\0" \
-	"importbootenv=echo Importing environment from mmc ...; " \
-		"env import -t ${loadaddr} ${filesize}\0" \
 
 #ifndef CONFIG_RESTORE_FLASH
 /* set to negative value for no autoboot */
-#define CONFIG_BOOTDELAY		3
+#define CONFIG_BOOTDELAY		2
 
 #define CONFIG_BOOTCOMMAND \
 	"mmc rescan; " \
 	"if run loadbootenv; then "				   \
-		"echo Loaded environment from ${bootenv}; " \
-		"run importbootenv; " \
+		"echo Loading environment from ${bootenv}; " \
+		"env import -t ${loadaddr} ${filesize}; " \
 	"fi; " \
         "if test -n ${uenvcmd}; then " \
                 "echo Running uenvcmd ...; " \
                 "run uenvcmd; " \
         "fi; " \
 	"echo Using default boot sequence.; " \
-	"fatload mmc 0:1 88000000 ubldr; " \
-	"bootelf 88000000;"
+	"fatload mmc ${mmc_dev} ${loadaddr} ${nextstage}; " \
+	"bootelf ${loadaddr};"
 
 #else
 #define CONFIG_BOOTDELAY		0
@@ -137,7 +136,7 @@
 #define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	0x300 /* address 0x60000 */
 #define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	0x200 /* 256 KB */
 #define CONFIG_SYS_MMC_SD_FAT_BOOT_PARTITION	1
-#define CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME	"bbu-boot.img"
+#define CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME	"bb-uboot.img"
 #define CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME_ALT	"u-boot.img"
 #define CONFIG_SPL_MMC_SUPPORT
 #define CONFIG_SPL_FAT_SUPPORT
