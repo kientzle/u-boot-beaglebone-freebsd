@@ -56,24 +56,24 @@
 	"bootenv=uEnv.txt\0" \
 	"loadbootenv=fatload mmc ${mmc_dev} ${loadaddr} ${bootenv}\0" \
 	"importbootenv=echo Importing environment from mmc ...; " \
-		"env import -t $loadaddr $filesize\0" \
+		"env import -t ${loadaddr} ${filesize}\0" \
 
 #ifndef CONFIG_RESTORE_FLASH
 /* set to negative value for no autoboot */
 #define CONFIG_BOOTDELAY		3
 
 #define CONFIG_BOOTCOMMAND \
-	"mmc rescan;" \
+	"mmc rescan; " \
 	"if run loadbootenv; then "				   \
-		"echo Loaded environment from ${bootenv};" \
-		"run importbootenv;" \
-	"fi;" \
-        "if test -n $uenvcmd; then " \
-                "echo Running uenvcmd ...;" \
-                "run uenvcmd;" \
-        "fi;" \
-	"echo Using default boot sequence.;" \
-	"fatload mmc 0:1 88000000 ubldr;" \
+		"echo Loaded environment from ${bootenv}; " \
+		"run importbootenv; " \
+	"fi; " \
+        "if test -n ${uenvcmd}; then " \
+                "echo Running uenvcmd ...; " \
+                "run uenvcmd; " \
+        "fi; " \
+	"echo Using default boot sequence.; " \
+	"fatload mmc 0:1 88000000 ubldr; " \
 	"bootelf 88000000;"
 
 #else
@@ -137,7 +137,8 @@
 #define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR	0x300 /* address 0x60000 */
 #define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	0x200 /* 256 KB */
 #define CONFIG_SYS_MMC_SD_FAT_BOOT_PARTITION	1
-#define CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME	"u-boot.img"
+#define CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME	"bbu-boot.img"
+#define CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME_ALT	"u-boot.img"
 #define CONFIG_SPL_MMC_SUPPORT
 #define CONFIG_SPL_FAT_SUPPORT
 
@@ -159,7 +160,7 @@
  */
 #define CONFIG_SYS_TEXT_BASE		0x80100000
 #define CONFIG_SYS_SPL_MALLOC_START	0x80208000
-#define CONFIG_SYS_SPL_MALLOC_SIZE	0x100000
+#define CONFIG_SYS_SPL_MALLOC_SIZE	0x00100000
 
 /* Since SPL did all of this for us, we don't need to do it twice. */
 #ifndef CONFIG_SPL_BUILD
