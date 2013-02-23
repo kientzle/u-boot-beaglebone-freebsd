@@ -867,7 +867,8 @@ static int cpsw_recv(struct eth_device *dev)
 	int len;
 
 	while (cpdma_process(priv, &priv->rx_chan, &buffer, &len) >= 0) {
-		NetReceive(buffer, len);
+		/* Checksum shouldn't be accounted in packet's length */
+		NetReceive(buffer, len - 4);
 		cpdma_submit(priv, &priv->rx_chan, buffer, PKTSIZE);
 	}
 
